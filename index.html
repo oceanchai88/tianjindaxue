@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>天津大学校门管控系统</title>
+  <style>
+    /* ===== 全局重置 ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #f0f2f5;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* ===== 顶部导航栏 ===== */
+    .nav-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .nav-bar .title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== 蓝色主体背景 ===== */
+    .page-bg {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #1565c0 0%, #1976d2 40%, #1565c0 100%);
+      padding-top: 48px;
+    }
+
+    /* ===== 内容区 ===== */
+    .content {
+      padding: 24px 16px 40px;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    /* ===== 页面副标题 ===== */
+    .page-subtitle {
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ===== 表单卡片 ===== */
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    .form-card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* ===== 表单项 ===== */
+    .form-item {
+      margin-bottom: 16px;
+    }
+    .form-item label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .form-item label .required {
+      color: #e53935;
+      margin-left: 2px;
+    }
+    .form-item input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 15px;
+      color: #222;
+      outline: none;
+      background: #fafafa;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .form-item input:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 2px rgba(25,118,210,0.12);
+      background: #fff;
+    }
+    .form-item input.error {
+      border-color: #e53935;
+    }
+    .form-item .error-msg {
+      font-size: 12px;
+      color: #e53935;
+      margin-top: 4px;
+      display: none;
+    }
+    .form-item.has-error .error-msg { display: block; }
+    .form-item.has-error input { border-color: #e53935; }
+
+    /* ===== 提交按钮 ===== */
+    .btn-submit {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(135deg, #1976d2, #1565c0);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      margin-top: 8px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(21,101,192,0.35);
+      transition: opacity 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-submit:active {
+      opacity: 0.85;
+      transform: scale(0.98);
+    }
+
+    /* ===== 提示文字 ===== */
+    .tip-text {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<div class="nav-bar">
+  <span class="title">天津大学校门管控系统</span>
+</div>
+
+<!-- 蓝色主体背景 -->
+<div class="page-bg">
+  <div class="content">
+    <p class="page-subtitle">访客通行证申请</p>
+
+    <!-- 表单卡片 -->
+    <div class="form-card">
+      <h2>填写访客信息</h2>
+
+      <!-- 姓名 -->
+      <div class="form-item" id="item-name">
+        <label>姓名<span class="required">*</span></label>
+        <input type="text" id="inp-name" placeholder="请输入真实姓名" maxlength="20" value="柴建海" />
+        <div class="error-msg">请输入姓名</div>
+      </div>
+
+      <!-- 身份证号 -->
+      <div class="form-item" id="item-idcard">
+        <label>身份证号<span class="required">*</span></label>
+        <input type="text" id="inp-idcard" placeholder="请输入身份证号码" maxlength="18" value="130526198311263016" />
+        <div class="error-msg">请输入有效的身份证号（15位或18位）</div>
+      </div>
+
+      <!-- 单位 -->
+      <div class="form-item" id="item-dept">
+        <label>单位<span class="required">*</span></label>
+        <input type="text" id="inp-dept" placeholder="请输入所在单位" value="化工学院" maxlength="50" />
+        <div class="error-msg">请输入单位名称</div>
+      </div>
+
+      <!-- 车牌号 -->
+      <div class="form-item" id="item-plate">
+        <label>车牌号<span class="required">*</span></label>
+        <input type="text" id="inp-plate" placeholder="如：津C293N9" maxlength="10" value="津A853N0" />
+        <div class="error-msg">请输入有效的车牌号</div>
+      </div>
+
+      <!-- 生成按钮 -->
+      <button class="btn-submit" id="btn-generate" onclick="generatePass()">
+        生成今日门禁通行证
+      </button>
+    </div>
+
+    <p class="tip-text">本系统仅供天津大学校园管理使用</p>
+  </div>
+</div>
+
+<script>
+  // ===== 表单校验与跳转逻辑 =====
+
+  /**
+   * 校验身份证号格式（15位或18位）
+   */
+  function validateIdCard(id) {
+    id = id.trim();
+    // 15位身份证
+    if (/^\d{15}$/.test(id)) return true;
+    // 18位身份证（最后一位可以是X/x）
+    if (/^\d{17}[\dXx]$/.test(id)) return true;
+    return false;
+  }
+
+  /**
+   * 校验车牌号格式（支持普通车牌、新能源车牌）
+   */
+  function validatePlate(plate) {
+    plate = plate.trim();
+    // 普通车牌：省份简称 + 字母 + 5位字母数字
+    if (/^[\u4e00-\u9fa5][A-Za-z][A-Za-z0-9]{5}$/.test(plate)) return true;
+    // 新能源小型车：省份简称 + 字母 + 6位字母数字
+    if (/^[\u4e00-\u9fa5][A-Za-z][A-Za-z0-9]{6}$/.test(plate)) return true;
+    return false;
+  }
+
+  /**
+   * 生成通行证 - 校验后跳转到 pass.html
+   */
+  function generatePass() {
+    const name   = document.getElementById('inp-name').value.trim();
+    const idcard = document.getElementById('inp-idcard').value.trim();
+    const dept   = document.getElementById('inp-dept').value.trim();
+    const plate  = document.getElementById('inp-plate').value.trim();
+
+    let valid = true;
+
+    // 校验姓名
+    const itemName = document.getElementById('item-name');
+    if (!name) {
+      itemName.classList.add('has-error');
+      valid = false;
+    } else {
+      itemName.classList.remove('has-error');
+    }
+
+    // 校验身份证
+    const itemId = document.getElementById('item-idcard');
+    if (!validateIdCard(idcard)) {
+      itemId.classList.add('has-error');
+      valid = false;
+    } else {
+      itemId.classList.remove('has-error');
+    }
+
+    // 校验单位
+    const itemDept = document.getElementById('item-dept');
+    if (!dept) {
+      itemDept.classList.add('has-error');
+      valid = false;
+    } else {
+      itemDept.classList.remove('has-error');
+    }
+
+    // 校验车牌
+    const itemPlate = document.getElementById('item-plate');
+    if (!validatePlate(plate)) {
+      itemPlate.classList.add('has-error');
+      valid = false;
+    } else {
+      itemPlate.classList.remove('has-error');
+    }
+
+    if (!valid) return;
+
+    // ===== 生成申请时间（当天 08:59:04）=====
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const applyDate = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+    const applyTime = `${applyDate} 08:59:04`;
+    const updateTime = `${applyDate} 08:59:06`;
+
+    // ===== 通过 URL 参数传递数据 =====
+    const params = new URLSearchParams({
+      name:       name,
+      idcard:     idcard,
+      dept:       dept,
+      plate:      plate,
+      applyTime:  applyTime,
+      updateTime: updateTime
+    });
+
+    window.location.href = 'pass.html?' + params.toString();
+  }
+
+  // 回车键触发提交
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') generatePass();
+  });
+</script>
+</body>
+</html>

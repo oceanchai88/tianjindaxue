@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>天津大学校门管控系统</title>
+  <style>
+    /* ===== 全局重置 ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* ===== 顶部导航栏 ===== */
+    .nav-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 48px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .nav-bar .nav-back {
+      position: absolute;
+      left: 14px;
+      font-size: 20px;
+      color: #333;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      padding: 8px;
+    }
+    .nav-bar .nav-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #000;
+      letter-spacing: 0.5px;
+    }
+    .nav-bar .nav-sub {
+      position: absolute;
+      font-size: 11px;
+      color: #888;
+      top: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    /* ===== 蓝色主体背景 ===== */
+    .page-bg {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #1565c0 0%, #1976d2 50%, #1565c0 100%);
+      padding-top: 56px;
+      padding-bottom: 40px;
+    }
+
+    /* ===== 内容区 ===== */
+    .content {
+      padding: 16px 14px;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    /* ===== 顶部浅蓝标签 ===== */
+    .tag-bar {
+      background: #ddeeff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .tag-bar span {
+      font-size: 16px;
+      color: #1976d2;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== 通行证主卡片 ===== */
+    .pass-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+    }
+
+    /* ===== 更新时间行 ===== */
+    .update-bar {
+      padding: 10px 16px 10px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .update-bar span {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    /* ===== 上半部分：照片 + 时间 + 对勾 ===== */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      padding: 16px 16px 12px;
+      gap: 12px;
+    }
+
+    /* 证件照片占位区域 */
+    /* ⚠️ 替换真实照片时：将 .photo-placeholder 替换为 <img> 标签，宽120px 高150px */
+    .photo-placeholder {
+      width: 120px;
+      min-width: 120px;
+      height: 150px;
+      background: #d0d0d0;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-placeholder .photo-icon {
+      font-size: 40px;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .photo-placeholder .photo-label {
+      font-size: 11px;
+      color: #aaa;
+    }
+
+    /* 右侧：日期时间 + 对勾 */
+    .card-top-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
+
+    /* 日期：无背景，黑色普通文字，与附件1一致 */
+    .date-text {
+      font-size: 18px;
+      color: #111;
+      font-weight: 400;
+      margin-bottom: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    /* 时间：HH:MM:SS 黑色粗体，秒数+小数部分蓝色，与附件1完全一致 */
+    .time-text {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: 0px;
+      white-space: nowrap;
+    }
+    /* 秒数（SS.s）为蓝色 */
+    .time-text .time-sec {
+      color: #1565c0;
+    }
+
+    /* 绿色圆形对勾 */
+    .check-circle {
+      width: 72px;
+      height: 72px;
+      background: #43a047;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 14px;
+      box-shadow: 0 2px 8px rgba(67,160,71,0.35);
+    }
+    .check-circle svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    /* ===== 允许通行 大字 ===== */
+    .allow-text {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      color: #e53935;
+      padding: 12px 0 16px;
+      letter-spacing: 6px;
+    }
+
+    /* ===== 信息列表 ===== */
+    .info-list {
+      border-top: 1px solid #e0e0e0;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e8e8e8;
+      min-height: 50px;
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      font-size: 15px;
+      color: #999;
+      min-width: 76px;
+      flex-shrink: 0;
+      font-weight: 400;
+    }
+    .info-value {
+      font-size: 15px;
+      color: #111;
+      text-align: right;
+      flex: 1;
+      word-break: break-all;
+      font-weight: 400;
+    }
+    /* 申请时间特殊样式（两行显示） */
+    .info-value.multiline {
+      text-align: right;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<div class="nav-bar">
+  <span class="nav-back" onclick="history.back()">&#x2715;</span>
+  <div>
+    <div class="nav-title">天津大学校门管控系统</div>
+  </div>
+</div>
+
+<!-- 蓝色主体背景 -->
+<div class="page-bg">
+  <div class="content">
+
+    <!-- 顶部浅蓝标签 -->
+    <div class="tag-bar">
+      <span>第三方服务人员进出校</span>
+    </div>
+
+    <!-- 通行证主卡片 -->
+    <div class="pass-card">
+
+      <!-- 更新时间行 -->
+      <div class="update-bar">
+        <span>更新于：<span id="update-time">--</span></span>
+      </div>
+
+      <!-- 上半部分：照片 + 时间 + 对勾 -->
+      <div class="card-top">
+
+        <!-- 证件照片 -->
+        <img src="ME1781257067499.png" alt="证件照片"
+             style="width:120px;height:150px;border-radius:6px;object-fit:cover;object-position:center top;flex-shrink:0;" />
+
+        <!-- 右侧：日期 + 时间 + 对勾 -->
+        <div class="card-top-right">
+          <!-- 实时日期 -->
+          <div class="date-text" id="live-date">--</div>
+          <!-- 实时时间：HH:MM: 黑色，SS.s 蓝色，与附件1完全一致 -->
+          <div class="time-text">
+            <span id="live-hm">--:--:</span><span class="time-sec"><span id="live-s">--</span>.<span id="live-ms">-</span></span>
+          </div>
+          <!-- 绿色对勾 -->
+          <div class="check-circle">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="20,6 9,17 4,12" stroke="#fff" stroke-width="3"
+                stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 允许通行 -->
+      <div class="allow-text">允许通行</div>
+
+      <!-- 信息列表 -->
+      <div class="info-list">
+
+        <div class="info-row">
+          <span class="info-label">姓名：</span>
+          <span class="info-value" id="info-name">--</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">身份证号：</span>
+          <span class="info-value" id="info-idcard">--</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">申请时间：</span>
+          <span class="info-value multiline" id="info-apply-time">--</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">职务：</span>
+          <span class="info-value" id="info-duty"></span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">单位：</span>
+          <span class="info-value" id="info-dept">--</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">通行方式：</span>
+          <span class="info-value">机动车</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">车牌号：</span>
+          <span class="info-value" id="info-plate">--</span>
+        </div>
+
+      </div>
+    </div><!-- /.pass-card -->
+
+  </div><!-- /.content -->
+</div><!-- /.page-bg -->
+
+<script>
+  // ===== 1. 读取 URL 参数并填充页面信息 =====
+
+  function getParam(key) {
+    return new URLSearchParams(window.location.search).get(key) || '';
+  }
+
+  const name       = getParam('name');
+  const idcard     = getParam('idcard');
+  const dept       = getParam('dept');
+  const plate      = getParam('plate');
+  const applyTime  = getParam('applyTime');
+  const updateTime = getParam('updateTime');
+
+  // 填充静态信息
+  document.getElementById('info-name').textContent      = name;
+  document.getElementById('info-idcard').textContent    = idcard;
+  document.getElementById('info-dept').textContent      = dept;
+  document.getElementById('info-plate').textContent     = plate;
+  document.getElementById('update-time').textContent    = updateTime;
+
+  // 申请时间：拆成两行展示（日期 + 时间）
+  const applyParts = applyTime.split(' ');
+  if (applyParts.length === 2) {
+    document.getElementById('info-apply-time').innerHTML =
+      applyParts[0] + '<br>' + applyParts[1];
+  } else {
+    document.getElementById('info-apply-time').textContent = applyTime;
+  }
+
+  // ===== 2. 页面打开时记录一次时间戳，固定显示，不走秒 =====
+
+  /**
+   * 格式化数字，补零至指定位数
+   */
+  function pad(n, len) {
+    return String(n).padStart(len || 2, '0');
+  }
+
+  // 页面加载瞬间抓取时间，之后固定不变
+  (function renderOpenTime() {
+    const now = new Date();
+
+    // 日期部分：YYYY年MM月DD日
+    const y = now.getFullYear();
+    const M = pad(now.getMonth() + 1);
+    const d = pad(now.getDate());
+    document.getElementById('live-date').textContent = `${y}年${M}月${d}日`;
+
+    // 时间部分：HH:MM: 黑色，SS.s 蓝色
+    const h  = pad(now.getHours());
+    const m  = pad(now.getMinutes());
+    const s  = pad(now.getSeconds());
+    document.getElementById('live-hm').textContent = `${h}:${m}:`;
+    document.getElementById('live-s').textContent  = s;
+
+    // 毫秒取第1位，显示为小数（如 .8）
+    const ms1 = Math.floor(now.getMilliseconds() / 100);
+    document.getElementById('live-ms').textContent = ms1;
+  })();
+
+  // ===== 3. 如果无参数（直接访问 pass.html），跳回首页 =====
+  if (!name && !idcard) {
+    // 延迟跳转，避免白屏
+    setTimeout(function() {
+      window.location.href = 'index.html';
+    }, 500);
+  }
+</script>
+</body>
+</html>
