@@ -95,109 +95,125 @@
     .card-top {
       display: flex;
       align-items: flex-start;
-      padding: 18px 16px 10px;
-      gap: 14px;
+      padding: 16px 16px 8px;
+      gap: 16px;
     }
 
-    /* 证件照片：矩形无圆角，与附件1一致 */
-    /* ⚠️ 替换照片：改 src 即可，保持 style 不变 */
+    /* 证件照片：无圆角，尺寸与附件1一致（更大）*/
+    /* ⚠️ 替换照片：改 src 即可 */
     .photo-img {
-      width: 110px;
-      min-width: 110px;
-      height: 145px;
+      width: 140px;
+      min-width: 140px;
+      height: 175px;
       object-fit: cover;
       object-position: center top;
-      border-radius: 4px;
+      border-radius: 0;
       display: block;
       flex-shrink: 0;
     }
 
-    /* 右侧：日期 + 时间 + 对勾，居中对齐 */
+    /* 右侧：日期 + 时间 + 对勾，垂直居中 */
     .card-top-right {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding-top: 6px;
+      justify-content: center;
+      padding-top: 0;
+      min-height: 175px;
     }
 
-    /* 日期：细体，黑色，约16px（附件1样式）*/
+    /* 日期：比时间小一号，时间28px，日期22px */
     .date-text {
-      font-size: 16px;
-      color: #222;
-      font-weight: 400;
-      margin-bottom: 0px;
-      letter-spacing: 0;
-      white-space: nowrap;
-    }
-
-    /* 时间大字：HH:MM: 黑色粗体，SS.s 红色粗体（附件1秒数为红色）*/
-    .time-text {
-      font-size: 34px;
-      font-weight: 700;
+      font-size: 22px;
       color: #111;
+      font-weight: 400;
+      margin-bottom: 2px;
       letter-spacing: 0;
       white-space: nowrap;
-      line-height: 1.15;
-    }
-    /* 秒数+小数 → 红色，与附件1完全一致 */
-    .time-text .time-sec {
-      color: #e53935;
     }
 
-    /* 绿色圆形对勾（附件1尺寸约68px）*/
+    /* 时间整体容器 */
+    .time-text {
+      white-space: nowrap;
+      line-height: 1.1;
+      display: flex;
+      align-items: baseline;
+    }
+    /* HH:MM: 黑色超粗体 */
+    .time-hm {
+      font-size: 28px;
+      font-weight: 900;
+      color: #000;
+      letter-spacing: -1px;
+    }
+    /* SS 秒数 → 蓝色 */
+    .time-s {
+      font-size: 28px;
+      font-weight: 900;
+      color: #1565c0;
+      letter-spacing: -1px;
+    }
+    /* .x 小数 → 红色 */
+    .time-ms {
+      font-size: 28px;
+      font-weight: 900;
+      color: #e53935;
+      letter-spacing: -1px;
+    }
+
+    /* 绿色圆形对勾，附件1约80px */
     .check-circle {
-      width: 68px;
-      height: 68px;
+      width: 80px;
+      height: 80px;
       background: #3daf3e;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 12px;
+      margin-top: 14px;
     }
     .check-circle svg {
-      width: 38px;
-      height: 38px;
+      width: 46px;
+      height: 46px;
     }
 
-    /* ===== 允许通行（附件1：红色，约34px，字间距约4px）===== */
+    /* ===== 允许通行：附件1红色，约34px，字间距0，紧凑 ===== */
     .allow-text {
       text-align: center;
       font-size: 34px;
       font-weight: 700;
       color: #e53935;
-      padding: 8px 0 12px;
-      letter-spacing: 4px;
+      padding: 10px 0 16px;
+      letter-spacing: 0;
     }
 
     /* ===== 信息列表 ===== */
     .info-list {
-      border-top: 1px solid #e8e8e8;
+      border-top: 1px solid #e0e0e0;
     }
     .info-row {
       display: flex;
       align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px solid #ebebeb;
-      min-height: 46px;
+      padding: 11px 16px;
+      border-bottom: 1px solid #e8e8e8;
+      min-height: 44px;
     }
     .info-row:last-child {
       border-bottom: none;
     }
-    /* 标签：浅灰色，约15px，与附件1一致 */
+    /* 标签：浅灰色 #aaa，14px，与附件1一致 */
     .info-label {
-      font-size: 15px;
+      font-size: 14px;
       color: #aaa;
-      min-width: 70px;
+      min-width: 68px;
       flex-shrink: 0;
       font-weight: 400;
       letter-spacing: 0;
     }
-    /* 值：深黑，约15px，右对齐 */
+    /* 值：深黑 #111，14px，右对齐 */
     .info-value {
-      font-size: 15px;
+      font-size: 14px;
       color: #111;
       text-align: right;
       flex: 1;
@@ -248,9 +264,9 @@
         <div class="card-top-right">
           <!-- 页面打开时的日期 -->
           <div class="date-text" id="live-date">--</div>
-          <!-- 时间：HH:MM: 黑色，SS.s 红色 -->
+          <!-- 时间：HH:MM: 黑色，SS 蓝色，.x 红色 -->
           <div class="time-text">
-            <span id="live-hm">--:--:</span><span class="time-sec"><span id="live-s">--</span>.<span id="live-ms">-</span></span>
+            <span class="time-hm" id="live-hm">--:--:</span><span class="time-s" id="live-s">--</span><span class="time-ms">.<span id="live-ms">-</span></span>
           </div>
           <!-- 绿色对勾 -->
           <div class="check-circle">
